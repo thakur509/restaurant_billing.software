@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Soham Bar and Restaurant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google Fonts for modern look -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+<style>
+  body {
+    background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+    margin: 0;
+    font-family: 'Montserrat', Arial, sans-serif;
+    color: #3e2f1c;
+    min-height: 100vh;
+  }
+  .screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.9s;
+    min-height: 100vh;
+  }
+  .screen.active { display: flex; }
+  .logo-circle {
+    background: #ffe5b4;
+    border-radius: 50%;
+    width: 140px;
+    height: 140px;
+    margin: 40px 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 32px #f7b26788;
+    border: 4px solid #d5381e;
+  }
+  .logo-circle img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+  .restro-title {
+    text-align: center;
+    color: #d5381e;
+    font-size: 2.3em;
+    letter-spacing: 2px;
+    margin-bottom: 0;
+    text-shadow: 1px 1px 3px #b02a16cc;
+  }
+  .subtitle {
+    color: #f97316;
+    font-size: 1.2em;
+    margin-bottom: 38px;
+  }
+  .start-btn, .order-btn, .bill-btn, .back-btn {
+    background: linear-gradient(90deg, #d5381e 60%, #f97316 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    padding: 17px 42px;
+    margin: 15px 6px 0 6px;
+    box-shadow: 0 4px 12px #f9731660;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .start-btn:hover, .order-btn:hover, .bill-btn:hover, .back-btn:hover {
+    background: linear-gradient(90deg, #f97316, #d5381e 100%);
+  }
+  .menu-section {
+    width: 95%;
+    max-width: 680px;
+    background: rgba(255,249,240,0.96);
+    border-radius: 20px;
+    box-shadow: 0 7px 24px #d5381e1a, 0 1.5px 6px #f9731620;
+    margin-bottom: 20px;
+    padding: 22px 18px 16px 18px;
+  }
+  .menu-section h2 {
+    border-left: 8px solid #f97316;
+    font-size: 1.16em;
+    color: #d5381e;
+    padding: 4px 0 4px 16px;
+    margin: 0 0 10px -16px;
+    letter-spacing: 1px;
+  }
+  .menu-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 13px;
+    justify-content: flex-start;
+    margin-bottom: 8px;
+  }
+  .menu-item {
+    background: #fff7ef;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px #f9731612;
+    padding: 12px 15px 10px 15px;
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .menu-item span.emoji { font-size: 1.8em; margin-right: 10px; vertical-align: middle; }
+  .menu-item label {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1em;
+  }
+  .menu-item input[type="number"] {
+    margin-left: 10px;
+    padding: 3px;
+    font-size: 1em;
+    width: 48px;
+    border: 1px solid #f97316;
+    border-radius: 8px;
+  }
+  .sticky-total {
+    font-weight: bold;
+    color: #d5381e;
+    margin-top: 18px;
+    font-size: 1.16em;
+    letter-spacing: 0.5px;
+    align-self: flex-end;
+  }
+  /* Bill styling */
+  .bill-box {
+    background: #fef6ec;
+    border-radius: 20px;
+    max-width: 490px;
+    width: 98%;
+    padding: 24px 25px;
+    box-shadow: 0 4px 20px #d5381e18;
+    margin: 32px 0 18px 0;
+    text-align: left;
+  }
+  .bill-box h2 {
+    color: #d5381e;
+    margin-top: 0;
+  }
+  .bill-items {
+    margin-bottom: 18px;
+  }
+  .bill-items li {
+    margin-bottom: 8px;
+    padding: 5px;
+    border-bottom: 1px dashed #ffe5b4;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+  }
+  .bill-summary p {
+    font-size: 1.06em;
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    font-weight:500;
+    color: #7c4400;
+  }
+  .bill-summary p.total {
+    color: #d5381e;
+    font-size:1.19em;
+    font-weight: bold;
+    border-top:2px solid #f97316;
+    margin-top:12px;
+    padding-top:4px;
+  }
+  /* Animations */
+  @keyframes fadeIn {0% {opacity: 0;} 100% {opacity: 1;}}
+  /* Responsive */
+  @media (max-width:650px){
+    .menu-item {width: 100%;}
+    .menu-section {padding:10px;}
+    .bill-box{padding:10px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- WELCOME SCREEN -->
+<div id="welcomeScreen" class="screen active">
+  <div class="logo-circle">
+    <!-- Use your own logo path or a free logo image -->
+    <img src="images/soham-logo.png" alt="Soham Bar and Restaurant Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1046/1046784.png'">
+  </div>
+  <div>
+    <div class="restro-title">🍾 Soham Bar & Restaurant 🍲</div>
+    <div class="subtitle">Eat. Drink. Relax. Welcome to a delicious experience!</div>
+    <button class="start-btn" onclick="showMenuScreen()">Start Your Order</button>
+  </div>
+</div>
+
+<!-- MENU SCREEN -->
+<div id="menuScreen" class="screen">
+  <div class="restro-title" style="font-size:1.5em;margin-bottom:5px;">🍽️ MENU</div>
+  <!-- Starters -->
+  <div class="menu-section">
+    <h2>🥗 Starters</h2>
+    <div class="menu-list" id="startersList"></div>
+  </div>
+  <!-- Main Course -->
+  <div class="menu-section">
+    <h2>🍛 Main Course</h2>
+    <div class="menu-list" id="mainsList"></div>
+  </div>
+  <!-- Bar Menu -->
+  <div class="menu-section">
+    <h2>🍹 Bar</h2>
+    <div class="menu-list" id="barList"></div>
+  </div>
+  <!-- Soft Drinks -->
+  <div class="menu-section">
+    <h2>🥤 Soft Drinks & Mocktails</h2>
+    <div class="menu-list" id="drinksList"></div>
+  </div>
+  <button class="bill-btn" onclick="generateBill()">See Bill</button>
+  <button class="back-btn" style="background:#ede1c2;color:#d5381e;margin-left:16px;" onclick="showWelcomeScreen()">Back</button>
+</div>
+
+<!-- BILL SCREEN -->
+<div id="billScreen" class="screen">
+  <div class="bill-box">
+    <h2>Your Final Bill</h2>
+    <ul class="bill-items" id="billItems"></ul>
+    <div class="bill-summary" id="billSummary"></div>
+  </div>
+  <button class="back-btn" onclick="showMenuScreen()">Back to Menu</button>
+  <button class="order-btn" style="background:#34b233; margin-left:14px;" onclick="restartOrder()">New Order</button>
+</div>
+
+<script>
+// MENU DATA (with emojis)
+const menu = {
+  starters: [
+    { emoji: "🥟", name: "Veg Spring Rolls", price: 140 },
+    { emoji: "🍗", name: "Chicken Tikka", price: 220 },
+    { emoji: "🐟", name: "Fish Fingers", price: 210 },
+    { emoji: "🥜", name: "Masala Peanuts", price: 80 }
+  ],
+  mains: [
+    { emoji: "🧀", name: "Paneer Butter Masala", price: 210 },
+    { emoji: "🍛", name: "Chicken Curry", price: 260 },
+    { emoji: "🥣", name: "Dal Tadka", price: 140 },
+    { emoji: "🍚", name: "Jeera Rice", price: 120 },
+    { emoji: "🍞", name: "Butter Naan (2 pcs)", price: 70 }
+  ],
+  bar: [
+    { emoji: "🍹", name: "Mojito", price: 180 },
+    { emoji: "🍸", name: "Cosmopolitan", price: 210 },
+    { emoji: "🥃", name: "Whiskey Sour", price: 250 },
+    { emoji: "🍅", name: "Bloody Mary", price: 190 },
+    { emoji: "🍺", name: "Kingfisher (Pint)", price: 110 },
+    { emoji: "🍻", name: "Budweiser (Pint)", price: 140 },
+    { emoji: "🥃", name: "Whiskey (Blender's Pride)", price: 80 },
+    { emoji: "🥃", name: "Rum (Old Monk)", price: 70 },
+    { emoji: "🍸", name: "Vodka (Smirnoff)", price: 90 },
+  ],
+  drinks: [
+    { emoji: "🥤", name: "Virgin Mojito", price: 120 },
+    { emoji: "🍹", name: "Fruit Punch", price: 110 },
+    { emoji: "🥤", name: "Coke / Sprite (300ml)", price: 50 },
+    { emoji: "💧", name: "Mineral Water", price: 40 }
+  ]
+};
+// Order data object
+let order = { starters:[], mains:[], bar:[], drinks:[] };
+
+// ----------- RENDERING MENU -------------- //
+function renderMenu() {
+  for(const section of Object.keys(menu)) {
+    const listId = section+"List";
+    const parent = document.getElementById(listId);
+    parent.innerHTML = '';
+    menu[section].forEach((item,i) => {
+      // unique id
+      const itemId = section+"-"+i;
+      const html = `
+        <div class="menu-item">
+          <label><span class="emoji">${item.emoji}</span>
+          ${item.name} <span style="color:#846517;font-weight:400;font-size:.98em;">— Rs. ${item.price}</span>
+          <input type="number" min="0" value="0" id="${itemId}" onchange="updateOrder('${section}',${i},this.value)" />
+          </label>
+        </div>
+      `;
+      parent.innerHTML += html;
+    });
+  }
+  // restore previously filled if any
+  for(const section of Object.keys(order)) {
+    order[section].forEach(oi => {
+      let idx = menu[section].findIndex(m=>m.name===oi.name);
+      if(idx>-1) document.getElementById(section+"-"+idx).value = oi.qty;
+    });
+  }
+}
+function updateOrder(section,i,val) {
+  let qty = Math.max(0,parseInt(val)||0);
+  let m = menu[section][i];
+  // Remove or update
+  order[section]=order[section].filter(oi=>oi.name!==m.name);
+  if(qty>0) order[section].push({name:m.name, price:m.price, qty, emoji: m.emoji});
+}
+
+// ------------- SCREENS NAVIGATION ------------- //
+function showWelcomeScreen() {
+  showScreen('welcomeScreen');
+}
+function showMenuScreen() {
+  showScreen('menuScreen');
+  renderMenu();
+}
+function showBillScreen() {
+  showScreen('billScreen');
+}
+
+// Single function to handle all screens
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ------------- BILL GENERATION -------------- //
+function generateBill() {
+  // Gather all selected items
+  let selected=[];
+  for(const section of Object.keys(order))
+    order[section].forEach(oi => {if(oi.qty>0) selected.push(oi);});
+  if(selected.length===0) { alert("Please select at least one item!"); return; }
+  // Show Bill screen
+  showBillScreen();
+  // List items in bill
+  let ul = document.getElementById('billItems');
+  ul.innerHTML='';
+  let subtotal=0;
+  selected.forEach(i=>{
+    ul.innerHTML+=`<li><span>${i.emoji} ${i.name} x ${i.qty}</span><span>Rs. ${(i.price*i.qty).toFixed(2)}</span></li>`;
+    subtotal+=i.price*i.qty;
+  });
+  // Taxes
+  let gst = subtotal*0.05; // 5%
+  let service = subtotal*0.05; // 5%
+  let luxury = subtotal>700 ? subtotal*0.10 : 0; // 10% luxury if subtotal over 700
+  let total = subtotal + gst + service + luxury;
+  // Bill summary
+  document.getElementById('billSummary').innerHTML=`
+    <p><span>Subtotal</span><span>Rs. ${subtotal.toFixed(2)}</span></p>
+    <p><span>GST (5%)</span><span>Rs. ${gst.toFixed(2)}</span></p>
+    <p><span>Service Charge (5%)</span><span>Rs. ${service.toFixed(2)}</span></p>
+    <p><span>Luxury Tax (10%)</span><span>${ luxury>0 ? "Rs. "+luxury.toFixed(2) : '<span style="color:#a7a;">N/A</span>'}</span></p>
+    <p class="total"><span>Total</span><span>Rs. ${total.toFixed(2)}</span></p>
+    <p style="color:#34b233;font-weight:bold;margin-top:12px;">
+      Thank you for visiting Soham Bar & Restaurant!<br>Bill generated at ${showTime()}.
+      <br><span style="font-size:.85em;">Taxes as per government rules.</span>
+    </p>
+  `;
+}
+// Time utility for bill
+function showTime(){
+  let d = new Date();
+  return d.toLocaleString('en-IN',{hour12:true});
+}
+// Restart order
+function restartOrder() {
+  order = { starters:[], mains:[], bar:[], drinks:[] }; // reset
+  showWelcomeScreen();
+}
+window.onload = showWelcomeScreen;
+// Add menu to DOM for menu screen
+document.addEventListener('DOMContentLoaded', renderMenu);
+</script>
+</body>
+</html>

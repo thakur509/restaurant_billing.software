@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Soham Fastfood Corner 🍔</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+    }
+
+    .section {
+      display: none;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      padding: 30px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #e63946;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    td, th {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    input[type="number"] {
+      width: 60px;
+      padding: 5px;
+    }
+
+    .btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: block;
+      margin: 30px auto 0;
+    }
+
+    .btn:hover {
+      background: #218838;
+    }
+
+    .summary {
+      background: #e0f7fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .tax-line {
+      margin: 6px 0;
+    }
+
+    hr {
+      margin: 20px 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Welcome Section -->
+  <div id="welcome" class="section active">
+    <div class="card">
+      <h1>🍟 Soham Fastfood Corner</h1>
+      <p>Welcome to the tastiest place in town! Ready to order?</p>
+      <button class="btn" onclick="showSection('menu')">Start Order 🍔</button>
+    </div>
+  </div>
+
+  <!-- Menu Selection Section -->
+  <div id="menu" class="section">
+    <div class="card">
+      <h2>📋 Select Your Items</h2>
+      <form id="orderForm">
+        <table>
+          <tr><th>🍽 Item</th><th>💰 Price</th><th>Qty</th></tr>
+          <tr><td>🍕 Pizza</td><td>150</td><td><input type="number" id="pizza" min="0" value="0"></td></tr>
+          <tr><td>🍔 Burger</td><td>100</td><td><input type="number" id="burger" min="0" value="0"></td></tr>
+          <tr><td>🍝 Pasta</td><td>120</td><td><input type="number" id="pasta" min="0" value="0"></td></tr>
+          <tr><td>🥤 Coke</td><td>50</td><td><input type="number" id="coke" min="0" value="0"></td></tr>
+          <tr><td>🍟 Fries</td><td>70</td><td><input type="number" id="fries" min="0" value="0"></td></tr>
+        </table>
+        <button type="button" class="btn" onclick="generateBill()">Generate Bill 💳</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bill Summary Section -->
+  <div id="bill" class="section">
+    <div class="card">
+      <h2>🧾 Bill Summary</h2>
+      <div id="billOutput" class="summary"></div>
+      <hr>
+      <h3 style="text-align: center;">🙏 Thank you for ordering at Soham Fastfood Corner! 😊</h3>
+    </div>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function generateBill() {
+      const prices = {
+        pizza: 150,
+        burger: 100,
+        pasta: 120,
+        coke: 50,
+        fries: 70
+      };
+
+      let subtotal = 0;
+      let summary = '';
+
+      for (let item in prices) {
+        const qty = parseInt(document.getElementById(item).value) || 0;
+        if (qty > 0) {
+          const total = qty * prices[item];
+          subtotal += total;
+          summary += `<div>${qty} x ${item.charAt(0).toUpperCase() + item.slice(1)} = Rs. ${total.toFixed(2)}</div>`;
+        }
+      }
+
+      const cgst = subtotal * 0.09;
+      const sgst = subtotal * 0.10;
+      const totalTax = cgst + sgst;
+      const total = subtotal + totalTax;
+
+      document.getElementById("billOutput").innerHTML = `
+        ${summary || "<i>No items selected.</i>"}
+        <div class="tax-line"><b>Subtotal:</b> Rs. ${subtotal.toFixed(2)}</div>
+        <div class="tax-line">CGST (9%): Rs. ${cgst.toFixed(2)}</div>
+        <div class="tax-line">SGST (10%): Rs. ${sgst.toFixed(2)}</div>
+        <div class="tax-line"><b>Total Tax:</b> Rs. ${totalTax.toFixed(2)}</div>
+        <div class="tax-line"><b>Total Bill:</b> Rs. ${total.toFixed(2)}</div>
+      `;
+
+      showSection('bill');
+    }
+  </script>
+
+</body>
+</html>

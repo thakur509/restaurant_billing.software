@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Restaurant Billing System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 450px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    td, th {
+      padding: 8px;
+    }
+
+    input[type="number"] {
+      width: 60px;
+    }
+
+    #bill {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background: #28a745;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background: #218838;
+    }
+
+    .tax-line {
+      margin: 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🍽 Restaurant Billing</h2>
+  <form id="orderForm">
+    <table border="1">
+      <tr>
+        <th>Item</th>
+        <th>Price (Rs.)</th>
+        <th>Quantity</th>
+      </tr>
+      <tr>
+        <td>Pizza</td>
+        <td>150</td>
+        <td><input type="number" min="0" value="0" id="pizza"></td>
+      </tr>
+      <tr>
+        <td>Burger</td>
+        <td>100</td>
+        <td><input type="number" min="0" value="0" id="burger"></td>
+      </tr>
+      <tr>
+        <td>Pasta</td>
+        <td>120</td>
+        <td><input type="number" min="0" value="0" id="pasta"></td>
+      </tr>
+      <tr>
+        <td>Coke</td>
+        <td>50</td>
+        <td><input type="number" min="0" value="0" id="coke"></td>
+      </tr>
+      <tr>
+        <td>Fries</td>
+        <td>70</td>
+        <td><input type="number" min="0" value="0" id="fries"></td>
+      </tr>
+    </table>
+
+    <button type="button" class="btn" onclick="generateBill()">Generate Bill</button>
+  </form>
+
+  <div id="bill"></div>
+</div>
+
+<script>
+  function generateBill() {
+    const prices = {
+      pizza: 150,
+      burger: 100,
+      pasta: 120,
+      coke: 50,
+      fries: 70
+    };
+
+    let subtotal = 0;
+    let summary = '';
+
+    for (let item in prices) {
+      const qty = parseInt(document.getElementById(item).value) || 0;
+      if (qty > 0) {
+        const itemTotal = qty * prices[item];
+        subtotal += itemTotal;
+        summary += `<div>${qty} x ${item.charAt(0).toUpperCase() + item.slice(1)} = Rs. ${itemTotal.toFixed(2)}</div>`;
+      }
+    }
+
+    const cgst = subtotal * 0.09;
+    const sgst = subtotal * 0.10;
+    const tax = cgst + sgst;
+    const total = subtotal + tax;
+
+    document.getElementById("bill").innerHTML = `
+      <h3>Bill Summary</h3>
+      ${summary || "<i>No items selected.</i>"}
+      <div class="tax-line"><b>Subtotal:</b> Rs. ${subtotal.toFixed(2)}</div>
+      <div class="tax-line">CGST (9%): Rs. ${cgst.toFixed(2)}</div>
+      <div class="tax-line">SGST (10%): Rs. ${sgst.toFixed(2)}</div>
+      <div class="tax-line"><b>Total Tax:</b> Rs. ${tax.toFixed(2)}</div>
+      <div class="tax-line"><b>Total Bill:</b> Rs. ${total.toFixed(2)}</div>
+      <hr>
+      <div><b>Thank you! Visit again 😊</b></div>
+    `;
+  }
+</script>
+
+</body>
+</html>
